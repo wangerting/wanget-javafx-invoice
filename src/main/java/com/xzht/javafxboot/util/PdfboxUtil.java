@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class PdfboxUtil {
 
-    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/5月/";
+    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/";
     //经过测试,dpi为96,100,105,120,150,200中,105显示效果较为清晰,体积稳定,dpi越高图片体积越大,一般电脑显示分辨率为96
     public static final float DEFAULT_DPI = 300;
     //默认转换的图片格式为jpg
@@ -33,23 +33,20 @@ public class PdfboxUtil {
 
     public static void main(String[] args) throws Exception {
 
+        String sourcePdf = basePath.concat("moreToOne.pdf");
+        PdfUtils.MergePdf(basePath, sourcePdf);
+        String total = PdfUtils.readPdfGetMoney(sourcePdf);
+        log.debug("total={}", total);
+        //pdf转图片
+        pdfToImage(sourcePdf, basePath);
+        //图片转pdf
+        imagesToPdf(sourcePdf, basePath);
 
-
-//        String sourcePdf = basePath.concat("moreToOne.pdf");
-//        PdfUtils.MergePdf(basePath, sourcePdf);
-//        String total = PdfUtils.readPdfGetMoney(sourcePdf);
-//        log.debug("total={}", total);
-//        //pdf转图片
-//        pdfToImage(sourcePdf, basePath);
-//        //图片转pdf
-//        imagesToPdf(sourcePdf, basePath);
-//
-//        //4合1 pdf
-//        String targetPdf = basePath + "4to1.pdf";
-//        PdfUtils.merge4PagesIntoOne(sourcePdf, targetPdf);
-//
-//        //删除生成的图片
-//        delImages(basePath);
+        //4合1 pdf
+        String targetPdf = basePath + "4to1.pdf";
+        PdfUtils.merge4PagesIntoOne(sourcePdf, targetPdf);
+        //删除生成的图片
+        delImages(basePath);
 
     }
 

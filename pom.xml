@@ -117,9 +117,9 @@
                     <!-- 启动类 -->
                     <mainClass>com.xzht.javafxboot.Application</mainClass>
                     <!-- 公司名称 -->
-                    <vendor>Ceadeal</vendor>
+                    <vendor>湘泽红廷</vendor>
                     <!-- 应用名称 ${project.build.finalName} = ${project.artifactId}-${project.version} -->
-                    <appName>${project.build.finalName}</appName>
+                    <appName>发票合成工具</appName>
                     <!-- 发行版本 -->
                     <nativeReleaseVersion>${project.version}</nativeReleaseVersion>
                     <!--
