@@ -11,8 +11,8 @@
     <groupId>com.xzht</groupId>
     <artifactId>javafx-boot</artifactId>
     <version>1.0</version>
-    <name>wanget-javafx-boot</name>
-    <description>JavaFx with Spring Boot</description>
+    <name>wanget-javafx-invoice</name>
+    <description>发票合成工具</description>
 
     <properties>
         <java.version>1.8</java.version>
