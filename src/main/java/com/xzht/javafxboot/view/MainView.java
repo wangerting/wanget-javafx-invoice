@@ -1,4 +1,4 @@
-package com.ceadeal.javafxboot.view;
+package com.xzht.javafxboot.view;
 
 import de.felixroske.jfxsupport.AbstractFxmlView;
 import de.felixroske.jfxsupport.FXMLView;

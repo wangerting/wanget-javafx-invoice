@@ -1,5 +1,5 @@
 javafx:
-  title: JavaFx & SpringBoot
+  title: 电子发票合成工具
   appicons: /icon/icon.png
   stage:
     width: 640

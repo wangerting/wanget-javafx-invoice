@@ -1,4 +1,4 @@
-package com.ceadeal.javafxboot;
+package com.xzht.javafxboot;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

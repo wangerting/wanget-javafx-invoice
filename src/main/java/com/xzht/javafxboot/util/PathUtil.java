@@ -1,9 +1,8 @@
-package com.ceadeal.javafxboot.util;
+package com.xzht.javafxboot.util;
 
-import com.ceadeal.javafxboot.Application;
+import com.xzht.javafxboot.Application;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 
@@ -19,7 +18,8 @@ public class PathUtil {
          * 方法一：获取当前可执行jar包所在目录
          */
         String filePath = System.getProperty("java.class.path");
-        String pathSplit = System.getProperty("path.separator");//得到当前操作系统的分隔符，windows下是";",linux下是":"
+        //得到当前操作系统的分隔符，windows下是";",linux下是":"
+        String pathSplit = System.getProperty("path.separator");
         /**
          * 若没有其他依赖，则filePath的结果应当是该可运行jar包的绝对路径，
          * 此时我们只需要经过字符串解析，便可得到jar所在目录
@@ -39,17 +39,20 @@ public class PathUtil {
         String filePath = "";
         URL url = Application.class.getProtectionDomain().getCodeSource().getLocation();
         try {
-            filePath = URLDecoder.decode(url.getPath(), "utf-8");// 转化为utf-8编码，支持中文
+            // 转化为utf-8编码，支持中文
+            filePath = URLDecoder.decode(url.getPath(), "utf-8");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (filePath.endsWith(".jar")) {// 可执行jar包运行的结果里包含".jar"
+        // 可执行jar包运行的结果里包含".jar"
+        if (filePath.endsWith(".jar")) {
             // 获取jar包所在目录
             filePath = filePath.substring(0, filePath.lastIndexOf("/") + 1);
         }
 
         File file = new File(filePath);
-        filePath = file.getAbsolutePath();//得到windows下的正确路径
+        //得到windows下的正确路径
+        filePath = file.getAbsolutePath();
         return filePath;
     }
 

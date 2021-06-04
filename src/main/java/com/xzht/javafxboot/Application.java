@@ -1,17 +1,13 @@
-package com.ceadeal.javafxboot;
+package com.xzht.javafxboot;
 
-import com.ceadeal.javafxboot.util.MySplashScreen;
-import com.ceadeal.javafxboot.view.MainView;
+import com.xzht.javafxboot.util.MySplashScreen;
+import com.xzht.javafxboot.view.MainView;
 import de.felixroske.jfxsupport.AbstractJavaFxApplicationSupport;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -23,7 +19,6 @@ import java.util.Collections;
 public class Application extends AbstractJavaFxApplicationSupport implements ApplicationRunner {
 
     public static void main(String[] args) {
-        // SpringApplication.run(Application.class, args);
         launch(Application.class, MainView.class, new MySplashScreen(), args);
     }
 

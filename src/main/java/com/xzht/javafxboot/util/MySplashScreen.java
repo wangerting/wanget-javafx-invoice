@@ -1,4 +1,4 @@
-package com.ceadeal.javafxboot.util;
+package com.xzht.javafxboot.util;
 
 import de.felixroske.jfxsupport.SplashScreen;
 import javafx.scene.Parent;
