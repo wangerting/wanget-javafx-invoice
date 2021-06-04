@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Erting.Wang

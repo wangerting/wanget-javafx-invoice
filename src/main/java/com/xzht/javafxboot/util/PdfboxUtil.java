@@ -10,7 +10,6 @@ import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,7 +31,6 @@ public class PdfboxUtil {
     public static final String DEFAULT_FORMAT = "png";
 
     public static void main(String[] args) throws Exception {
-
         String sourcePdf = basePath.concat("moreToOne.pdf");
         PdfUtils.MergePdf(basePath, sourcePdf);
         String total = PdfUtils.readPdfGetMoney(sourcePdf);
@@ -41,13 +39,11 @@ public class PdfboxUtil {
         pdfToImage(sourcePdf, basePath);
         //图片转pdf
         imagesToPdf(sourcePdf, basePath);
-
         //4合1 pdf
         String targetPdf = basePath + "4to1.pdf";
         PdfUtils.merge4PagesIntoOne(sourcePdf, targetPdf);
         //删除生成的图片
         delImages(basePath);
-
     }
 
     /**
@@ -91,11 +87,10 @@ public class PdfboxUtil {
                 singleImgRGB = image.getRGB(0, 0, width, height, null, 0, width);
                 // 写入流中
                 imageResult.setRGB(0, shiftHeight, width, height, singleImgRGB, 0, width);
+                // 写图片
                 ImageIO.write(imageResult, DEFAULT_FORMAT, new File(imgPath.concat(String.valueOf(i + 1)).concat(".png")));
             }
             pdDocument.close();
-            // 写图片
-
         } catch (Exception e) {
             e.printStackTrace();
         }

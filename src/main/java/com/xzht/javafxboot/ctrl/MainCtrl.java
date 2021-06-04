@@ -64,19 +64,19 @@ public class MainCtrl implements Initializable {
                 FileIoUtils.deleteFile(targetPdf);
                 //多个pdf合并成一个pdf
                 PdfUtils.MergePdf(basePath, sourcePdf);
+                // 金额统计
                 String total = PdfUtils.readPdfGetMoney(sourcePdf);
-
                 //pdf转图片
                 PdfboxUtil.pdfToImage(sourcePdf, basePath);
                 //图片转pdf
                 PdfboxUtil.imagesToPdf(sourcePdf, basePath);
-
+                //4合1
                 PdfUtils.merge4PagesIntoOne(sourcePdf, targetPdf);
-
                 //删除临时生成的pdf
                 FileIoUtils.deleteFile(sourcePdf);
                 //删除生成的图片
                 PdfboxUtil.delImages(basePath);
+                //将发票总金额统计好后，填充到文本框中
                 textArea.setText(total);
             } catch (Exception e) {
                 e.printStackTrace();
