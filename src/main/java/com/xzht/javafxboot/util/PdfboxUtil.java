@@ -6,13 +6,18 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +29,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class PdfboxUtil {
 
-    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/";
+    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/";
     //经过测试,dpi为96,100,105,120,150,200中,105显示效果较为清晰,体积稳定,dpi越高图片体积越大,一般电脑显示分辨率为96
     public static final float DEFAULT_DPI = 300;
     //默认转换的图片格式为jpg
@@ -35,15 +40,16 @@ public class PdfboxUtil {
         PdfUtils.MergePdf(basePath, sourcePdf);
         String total = PdfUtils.readPdfGetMoney(sourcePdf);
         log.debug("total={}", total);
-        //pdf转图片
-        pdfToImage(sourcePdf, basePath);
-        //图片转pdf
-        imagesToPdf(sourcePdf, basePath);
-        //4合1 pdf
-        String targetPdf = basePath + "4to1.pdf";
-        PdfUtils.merge4PagesIntoOne(sourcePdf, targetPdf);
-        //删除生成的图片
-        delImages(basePath);
+//        //pdf转图片
+//        pdfToImage(sourcePdf, basePath);
+//        //图片转pdf
+//        imagesToPdf(sourcePdf, basePath);
+//        //4合1 pdf
+//        String targetPdf = basePath + "4to1.pdf";
+//        PdfUtils.merge4PagesIntoOne(sourcePdf, targetPdf);
+////        删除生成的图片
+//        delImages(basePath);
+
     }
 
     /**
@@ -77,9 +83,9 @@ public class PdfboxUtil {
                 //使用第一张图片宽度;
                 width = imageWidth;
                 height = imageHeight;
-                if (width < height) {
-                    height = imageHeight / 2 - 100;
-                }
+//                if (width < height) {
+//                    height = imageHeight / 2 - 100;
+//                }
                 log.debug("width={},height={}", width, height);
                 //保存每页图片的像素值
                 imageResult = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -88,7 +94,16 @@ public class PdfboxUtil {
                 // 写入流中
                 imageResult.setRGB(0, shiftHeight, width, height, singleImgRGB, 0, width);
                 // 写图片
-                ImageIO.write(imageResult, DEFAULT_FORMAT, new File(imgPath.concat(String.valueOf(i + 1)).concat(".png")));
+                String imgFileName = imgPath.concat(String.valueOf(i + 1)).concat(".png");
+                String targetFile = imgPath.concat(String.valueOf(i + 1)).concat("-1").concat(".png");
+                File imgFile = new File(imgFileName);
+                ImageIO.write(imageResult, DEFAULT_FORMAT, imgFile);
+                //合成的图片有可能有空白，把空白裁剪掉
+                TrimWhite.trimWhite(imgFileName, targetFile);
+                RotateImage.rotate180(targetFile, imgFileName);
+                TrimWhite.trimWhite(imgFileName, targetFile);
+                RotateImage.rotate180(targetFile, imgFileName);
+                FileIoUtils.deleteFile(targetFile);
             }
             pdDocument.close();
         } catch (Exception e) {

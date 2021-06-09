@@ -1,6 +1,7 @@
 package com.xzht.javafxboot.ctrl;
 
 import com.xzht.javafxboot.util.FileIoUtils;
+import com.xzht.javafxboot.util.MoneyUtil;
 import com.xzht.javafxboot.util.PdfUtils;
 import com.xzht.javafxboot.util.PdfboxUtil;
 import de.felixroske.jfxsupport.FXMLController;
@@ -104,7 +105,7 @@ public class MainCtrl implements Initializable {
     public void onBtnNumToChClick() {
         String textNumText = textNum.getText();
         if (StringUtils.isNotEmpty(textNumText)) {
-            String rmbString = PdfUtils.toRmbString(new BigDecimal(textNumText));
+            String rmbString = MoneyUtil.toRmbString(new BigDecimal(textNumText));
             textCh.setText(rmbString);
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

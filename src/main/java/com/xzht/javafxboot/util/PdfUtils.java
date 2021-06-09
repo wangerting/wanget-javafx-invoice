@@ -5,11 +5,9 @@ import com.google.common.collect.Lists;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.RectangleReadOnly;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfImportedPage;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -29,6 +27,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,14 +42,53 @@ public class PdfUtils {
     public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/5/";
 
     public static void main(String[] args) throws Exception {
-        String sourcePdf = basePath + "moreToOne.pdf";
-        String targetPdf = basePath + "4to1-1.pdf";
-        FileIoUtils.deleteFile(sourcePdf);
-        FileIoUtils.deleteFile(targetPdf);
-        MergePdf(basePath, sourcePdf);
-        merge4PagesIntoOne(sourcePdf, targetPdf);
+//        String sourcePdf = basePath + "moreToOne.pdf";
+//        String targetPdf = basePath + "4to1-1.pdf";
+//        FileIoUtils.deleteFile(sourcePdf);
+//        FileIoUtils.deleteFile(targetPdf);
+//        MergePdf(basePath, sourcePdf);
+//        merge4PagesIntoOne(sourcePdf, targetPdf);
 //        readPdfGetMoney(sourcePdf);
 //        getImages(basePath + "其它_59.40元_2021.03.03_北京京东世纪信息技术有限公司.pdf");
+
+        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/餐饮费6890.pdf");
+        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/2.pdf");
+    }
+
+    public static void readPdfText(String path) {
+        File file = new File(path);
+        InputStream is = null;
+        PDDocument document = null;
+        try {
+            BigDecimal total = BigDecimal.ZERO;
+            document = PDDocument.load(file);
+            int pageSize = document.getNumberOfPages();
+            // 一页一页读取
+            for (int i = 0; i < pageSize; i++) {
+                // 文本内容
+                PDFTextStripper stripper = new PDFTextStripper();
+                // 设置按顺序输出
+                stripper.setSortByPosition(true);
+                stripper.setStartPage(i + 1);
+                stripper.setEndPage(i + 1);
+                String text = stripper.getText(document);
+                log.debug("text={}", text);
+                log.debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            }
+        } catch (Exception e) {
+            log.error("path={}, e={}", path, e);
+        } finally {
+            try {
+                if (document != null) {
+                    document.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                log.error("e={}", e);
+            }
+        }
     }
 
     /**
@@ -94,20 +132,23 @@ public class PdfUtils {
                             total = total.add(new BigDecimal(moneyStr));
                         } else {
                             String numToStr = getNumToStr(line);
+                            if (StringUtils.isEmpty(numToStr)) {
+                                String str = line.replace("价税合计", "").replace("（大写）", "").replace("（小写）", "")
+                                        .replaceAll(" ", "");
+                                log.debug("str={}", str);
+                                numToStr = MoneyUtil.ChineseConvertToNumber(str);
+                            }
                             total = total.add(new BigDecimal(numToStr));
                         }
+                        break;
                     }
                 }
                 log.debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
             }
-            log.debug("total={},RMB={}", total, toRmbString(total));
-            return "总金额=" + total + " | " + toRmbString(total).concat("\r\n已经在对应文件夹生成 '4to1.pdf' 文件用于打印！");
-        } catch (NumberFormatException e) {
+            log.debug("total={},RMB={}", total, MoneyUtil.toRmbString(total));
+            return "总金额=" + total + " | " + MoneyUtil.toRmbString(total).concat("\r\n已经在对应文件夹生成 '4to1.pdf' 文件用于打印！");
+        } catch (Exception e) {
             log.error("path={}, e={}", path, e);
-        } catch (InvalidPasswordException e) {
-            log.error("e={}", e);
-        } catch (IOException e) {
-            log.error("e={}", e);
         } finally {
             try {
                 if (document != null) {
@@ -238,9 +279,9 @@ public class PdfUtils {
                 float offsetX = (documentWidth - (pageWidth * scale)) / 2 + 5f;
 
                 if (wk % 2 == 0) {
-                    offsetX = ((documentWidth - (pageWidth * scale)) / 2) + documentWidth + 10f;
+                    offsetX = ((documentWidth - (pageWidth * scale)) / 2) + documentWidth + 15f;
                 }
-                float offsetY = (documentWidth - (pageHeight * scale)) * 2 + 10f;
+                float offsetY = (documentWidth - (pageHeight * scale)) * 2 + 20f;
                 if (wk > 2) {
                     offsetY = 5f;
                 }
@@ -252,50 +293,6 @@ public class PdfUtils {
 
         }
         doc.close();
-    }
-
-    public static String toRmbString(BigDecimal decimal) {
-        String yuan = "亿千百拾万千百拾元角分";
-        String digit = "零壹贰叁肆伍陆柒捌玖";
-        String result = "";
-        int y = (int) Math.round(decimal.doubleValue() * 100 - 0.5);
-
-        int dec = y % 100;
-        y = y / 100;
-        String money = String.valueOf(y);
-        if (y == 0) {
-            return result + "零元";
-        }
-
-        if (dec == 0) {
-            result = "整" + result;
-        } else {
-            int a = dec / 10;
-            int b = dec % 10;
-            if (a != 0) {
-                result = result + digit.charAt(a) + "角";
-            }
-            if (b != 0) {
-                result = result + digit.charAt(b) + "分";
-            }
-        }
-        if (y == 10) {
-            result = "拾元" + result;
-            return result;
-        } else {
-            int j = money.length() - 1;
-            int k = 8;
-            while (j >= 0) {
-                if (money.charAt(j) == '0') {
-                    j--;
-                    k--;
-                }
-                result = digit.charAt(money.charAt(j) - '0') + "" + yuan.charAt(k) + "" + result;
-                j--;
-                k--;
-            }
-            return result;
-        }
     }
 
     public static void getImages(String pdfFile) {
