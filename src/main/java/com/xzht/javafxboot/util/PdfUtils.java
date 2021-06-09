@@ -5,7 +5,10 @@ import com.google.common.collect.Lists;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.RectangleReadOnly;
-import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.cos.COSName;
@@ -27,7 +30,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +41,7 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class PdfUtils {
-    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/5/";
+    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/";
 
     public static void main(String[] args) throws Exception {
 //        String sourcePdf = basePath + "moreToOne.pdf";
@@ -51,8 +53,64 @@ public class PdfUtils {
 //        readPdfGetMoney(sourcePdf);
 //        getImages(basePath + "其它_59.40元_2021.03.03_北京京东世纪信息技术有限公司.pdf");
 
-        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/餐饮费6890.pdf");
-        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/2.pdf");
+        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf");
+        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1838.99.pdf");
+        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/餐饮费7195.pdf");
+
+        PdfboxUtil.pdfToImage("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf", basePath);
+        boolean words = isExistKeyWords("北京京东世纪信息技术有限公司", "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf");
+        log.debug("words={}", words);
+    }
+
+    public static boolean isExistKeyWords(String keyWords, PDDocument document, int page) throws Exception {
+        // 文本内容
+        PDFTextStripper stripper = new PDFTextStripper();
+        // 设置按顺序输出
+        stripper.setSortByPosition(true);
+        stripper.setStartPage(page);
+        stripper.setEndPage(page);
+        String text = stripper.getText(document).replaceAll("\\r", "").replaceAll("\\n", "").replaceAll(" ", "");
+        log.debug("text={}", text);
+        return text.contains(keyWords);
+    }
+
+    public static boolean isExistKeyWords(String keyWords, String pdfFile) {
+        if (StringUtils.isEmpty(keyWords)) {
+            return false;
+        }
+        File file = new File(pdfFile);
+        InputStream is = null;
+        PDDocument document = null;
+        try {
+            document = PDDocument.load(file);
+            int pageSize = document.getNumberOfPages();
+            // 一页一页读取
+            for (int i = 0; i < pageSize; i++) {
+                // 文本内容
+                PDFTextStripper stripper = new PDFTextStripper();
+                // 设置按顺序输出
+                stripper.setSortByPosition(true);
+                stripper.setStartPage(i + 1);
+                stripper.setEndPage(i + 1);
+                String text = stripper.getText(document).replaceAll("\\r", "").replaceAll("\\n", "").replaceAll(" ", "");
+                log.debug("text={}", text);
+                return text.contains(keyWords);
+            }
+        } catch (Exception e) {
+            log.error("pdfFile={}, e={}", pdfFile, e);
+        } finally {
+            try {
+                if (document != null) {
+                    document.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                log.error("e={}", e);
+            }
+        }
+        return false;
     }
 
     public static void readPdfText(String path) {
@@ -60,7 +118,6 @@ public class PdfUtils {
         InputStream is = null;
         PDDocument document = null;
         try {
-            BigDecimal total = BigDecimal.ZERO;
             document = PDDocument.load(file);
             int pageSize = document.getNumberOfPages();
             // 一页一页读取
@@ -74,6 +131,9 @@ public class PdfUtils {
                 String text = stripper.getText(document);
                 log.debug("text={}", text);
                 log.debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+                if (text.contains("北京京东世纪信息技术有限公司")) {
+                    log.warn("北京京东世纪信息技术有限公司");
+                }
             }
         } catch (Exception e) {
             log.error("path={}, e={}", path, e);
