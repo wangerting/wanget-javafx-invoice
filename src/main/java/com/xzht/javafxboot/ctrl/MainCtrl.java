@@ -43,7 +43,7 @@ public class MainCtrl implements Initializable {
 
     public TextArea textArea;
 
-    public TextField text, textNum, textCh;
+    public TextField text, textNum, textCh, keyWords;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,7 +68,7 @@ public class MainCtrl implements Initializable {
                 // 金额统计
                 String total = PdfUtils.readPdfGetMoney(sourcePdf);
                 //pdf转图片
-                PdfboxUtil.pdfToImage(sourcePdf, basePath);
+                PdfboxUtil.pdfToImage(sourcePdf, basePath, keyWords.getText() );
                 //图片转pdf
                 PdfboxUtil.imagesToPdf(sourcePdf, basePath);
                 //4合1

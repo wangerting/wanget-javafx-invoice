@@ -57,12 +57,15 @@ public class PdfUtils {
         readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1838.99.pdf");
         readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/餐饮费7195.pdf");
 
-        PdfboxUtil.pdfToImage("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf", basePath);
+        PdfboxUtil.pdfToImage("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf", basePath, "北京京东世纪信息技术有限公司");
         boolean words = isExistKeyWords("北京京东世纪信息技术有限公司", "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf");
         log.debug("words={}", words);
     }
 
     public static boolean isExistKeyWords(String keyWords, PDDocument document, int page) throws Exception {
+        if (StringUtils.isEmpty(keyWords)) {
+            return false;
+        }
         // 文本内容
         PDFTextStripper stripper = new PDFTextStripper();
         // 设置按顺序输出
@@ -71,7 +74,12 @@ public class PdfUtils {
         stripper.setEndPage(page);
         String text = stripper.getText(document).replaceAll("\\r", "").replaceAll("\\n", "").replaceAll(" ", "");
         log.debug("text={}", text);
-        return text.contains(keyWords);
+        for (String keyWord : keyWords.split(",")) {
+            if (text.contains(keyWords)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean isExistKeyWords(String keyWords, String pdfFile) {

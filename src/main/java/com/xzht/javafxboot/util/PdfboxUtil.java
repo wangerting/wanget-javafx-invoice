@@ -6,18 +6,13 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +39,7 @@ public class PdfboxUtil {
         String total = PdfUtils.readPdfGetMoney(sourcePdf);
         log.debug("total={}", total);
         //pdf转图片
-        pdfToImage(sourcePdf, basePath);
+        pdfToImage(sourcePdf, basePath, "北京京东世纪信息技术有限公司");
         //图片转pdf
         imagesToPdf(sourcePdf, basePath);
         //4合1 pdf
@@ -57,10 +52,11 @@ public class PdfboxUtil {
      * pdf转图片
      *
      * @param pdfPath PDF路径
+     * @param keyWords
      * @imgPath img路径
      * @page_end 要转换的页码，也可以定义开始页码和结束页码，我这里只需要一页，根据需求自行添加
      */
-    public static void pdfToImage(String pdfPath, String imgPath) {
+    public static void pdfToImage(String pdfPath, String imgPath, String keyWords) {
         try {
             //图像合并使用参数
             // 总宽度
@@ -85,7 +81,7 @@ public class PdfboxUtil {
                 width = imageWidth;
                 height = imageHeight;
                 log.debug("width={},height={},i={}", width, height, i);
-                if (width < height && PdfUtils.isExistKeyWords("北京京东世纪信息技术有限公司", pdDocument, i + 1)) {
+                if (width < height && PdfUtils.isExistKeyWords(keyWords, pdDocument, i + 1)) {
                     height = imageHeight / 2 - 100;
                     log.debug("keyWords is true,pdfPath={}", pdfPath);
                 }

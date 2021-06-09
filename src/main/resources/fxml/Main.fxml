@@ -11,30 +11,40 @@
             <Font size="14.0" />
          </font>
       </TextField>
-      <Button fx:id="btnAlert" layoutX="14.0" layoutY="170.0" mnemonicParsing="false" text="4合1" onAction="#onBtnAlertClick" />
-      <Button fx:id="btnOpenDir" layoutX="65.0" layoutY="170.0" mnemonicParsing="false" text="打开当前目录" onAction="#onBtnOpenDir" />
       <TextArea fx:id="textArea" layoutX="14.0" layoutY="50.0" editable ="false" prefRowCount="5">
          <font>
             <Font size="14.0" />
          </font>
       </TextArea>
-      <Label layoutX="10.0" layoutY="225.0" text="金额:">
+      <Button fx:id="btnAlert" layoutX="14.0" layoutY="170.0" mnemonicParsing="false" text="4合1" onAction="#onBtnAlertClick" />
+      <Button fx:id="btnOpenDir" layoutX="65.0" layoutY="170.0" mnemonicParsing="false" text="打开当前目录" onAction="#onBtnOpenDir" />
+      <Label layoutX="10.0" layoutY="225.0" text="关键字:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="textNum" layoutX="44.0" layoutY="220.0" >
+      <TextField fx:id="keyWords" layoutX="54.0" layoutY="220.0" prefWidth="500.0">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <Button fx:id="btnNumToch" layoutX="245.0" layoutY="220.0" mnemonicParsing="false" text="转换" onAction="#onBtnNumToChClick" />
-      <Label layoutX="310.0" layoutY="225.0" text="大写:">
+      <Label layoutX="10.0" layoutY="270.0" text="金额:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="textCh" layoutX="340.0" layoutY="220.0" >
+      <TextField fx:id="textNum" layoutX="44.0" layoutY="265.0" >
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+      <Button fx:id="btnNumToch" layoutX="245.0" layoutY="265.0" mnemonicParsing="false" text="转换" onAction="#onBtnNumToChClick" />
+      <Label layoutX="310.0" layoutY="270.0" text="大写:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="textCh" layoutX="340.0" layoutY="265.0" >
          <font>
             <Font size="14.0" />
          </font>
