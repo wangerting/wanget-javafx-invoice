@@ -15,9 +15,6 @@ import java.io.IOException;
 public class TrimWhite {
     private BufferedImage img;
 
-    public static int WIGHT_DIV = 20;
-    public static int HEIGHT_DIV = 30;
-
     public TrimWhite(File input) {
         try {
             img = ImageIO.read(input);
@@ -26,9 +23,19 @@ public class TrimWhite {
         }
     }
 
-    public void trim() {
-        int width = getTrimmedWidth();
-        int height = getTrimmedHeight();
+    /**
+     * 接口说明
+     *
+     * @param color Color.WHITE:去白边
+     * @return void
+     * @throws
+     * @author Erting.Wang
+     * @date 2021/6/10 10:59 上午
+     */
+    public void trim(Color color) {
+
+        int width = getTrimmedWidth(color);
+        int height = getTrimmedHeight(color);
 
         BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics g = newImg.createGraphics();
@@ -44,49 +51,59 @@ public class TrimWhite {
         }
     }
 
-    private int getTrimmedWidth() {
+    private int getTrimmedWidth(Color color) {
         int height = this.img.getHeight();
         int width = this.img.getWidth();
         int trimmedWidth = 0;
         for (int i = 0; i < height; i++) {
             for (int j = width - 1; j >= 0; j--) {
-                if (img.getRGB(j, i) != Color.WHITE.getRGB() && j > trimmedWidth) {
+                if (img.getRGB(j, i) != color.getRGB() && j > trimmedWidth) {
                     trimmedWidth = j;
                     break;
                 }
             }
         }
-        return trimmedWidth + WIGHT_DIV;
+        return trimmedWidth + 5;
     }
 
-    private int getTrimmedHeight() {
+    private int getTrimmedHeight(Color color) {
         int width = this.img.getWidth();
         int height = this.img.getHeight();
         int trimmedHeight = 0;
         for (int i = 0; i < width; i++) {
             for (int j = height - 1; j >= 0; j--) {
-                if (img.getRGB(i, j) != Color.WHITE.getRGB() && j > trimmedHeight) {
+                if (img.getRGB(i, j) != color.getRGB() && j > trimmedHeight) {
                     trimmedHeight = j;
                     break;
                 }
             }
         }
-        return trimmedHeight + HEIGHT_DIV;
+        return trimmedHeight + 10;
     }
 
     public static void main(String[] args) throws Exception {
-        String srcFile = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4.png";
-        String targetFile = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4-1.png";
-        String srcFile2 = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4-2.png";
-        String targetFile2 = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4-3.png";
-        trimWhite(srcFile, targetFile);
-        RotateImage.rotate180(targetFile, srcFile2);
-        trimWhite(srcFile2, targetFile2);
+//        String srcFile = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4.png";
+//        String targetFile = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4-1.png";
+//        String srcFile2 = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4-2.png";
+//        String targetFile2 = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4-3.png";
+//        trimWhite(srcFile, targetFile);
+//        RotateImage.rotate180(targetFile, srcFile2);
+//        trimWhite(srcFile2, targetFile2);
+
+        String img = "/Users/wangerting/Desktop/牛交所/牛交所/发票/0104/4.png";
+        String img2 = "/Users/wangerting/Desktop/牛交所/牛交所/发票/0104/4-4.png";
+        trimBlack(img, img2);
     }
 
     public static void trimWhite(String srcFile, String targetFile) {
         TrimWhite trim = new TrimWhite(new File(srcFile));
-        trim.trim();
+        trim.trim(Color.WHITE);
+        trim.write(new File(targetFile));
+    }
+
+    public static void trimBlack(String srcFile, String targetFile) {
+        TrimWhite trim = new TrimWhite(new File(srcFile));
+        trim.trim(Color.BLACK);
         trim.write(new File(targetFile));
     }
 }

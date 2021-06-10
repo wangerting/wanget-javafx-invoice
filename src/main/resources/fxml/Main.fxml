@@ -23,7 +23,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="keyWords" layoutX="54.0" layoutY="220.0" prefWidth="500.0">
+      <TextField fx:id="keyWords" layoutX="58.0" layoutY="220.0" prefWidth="500.0">
          <font>
             <Font size="14.0" />
          </font>

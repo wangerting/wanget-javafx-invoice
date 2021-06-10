@@ -25,12 +25,15 @@ import java.util.regex.Pattern;
 public class PdfboxUtil {
 
     public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/";
+    //    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/0104/";
     //经过测试,dpi为96,100,105,120,150,200中,105显示效果较为清晰,体积稳定,dpi越高图片体积越大,一般电脑显示分辨率为96
     public static final float DEFAULT_DPI = 300;
     //默认转换的图片格式为jpg
     public static final String DEFAULT_FORMAT = "png";
 
     public static void main(String[] args) throws Exception {
+        //删除生成的图片
+        delImages(basePath);
         String sourcePdf = basePath.concat("moreToOne.pdf");
         String targetPdf = basePath + "4to1.pdf";
         FileIoUtils.deleteFile(sourcePdf);
@@ -51,7 +54,7 @@ public class PdfboxUtil {
     /**
      * pdf转图片
      *
-     * @param pdfPath PDF路径
+     * @param pdfPath  PDF路径
      * @param keyWords
      * @imgPath img路径
      * @page_end 要转换的页码，也可以定义开始页码和结束页码，我这里只需要一页，根据需求自行添加
@@ -138,8 +141,19 @@ public class PdfboxUtil {
                     String temp = imagesPath.concat(File.separator).concat(images[i]);
                     Image img = Image.getInstance(temp);
                     img.setAlignment(Image.ALIGN_CENTER);
+
+                    //2480*3508
+                    float imgWidth = img.getWidth();
+                    float imgHeight = img.getHeight();
+                    log.debug("start, imgWidth={},imgHeight={}", imgWidth, imgHeight);
+//                    if (imgWidth < imgHeight) {
+                    imgWidth = (3508 - 40) / 2f;
+                    imgHeight = (2480 - 100) / 2f;
+                    img.scaleAbsolute(imgWidth, imgHeight);
+//                    }
+                    log.debug("end, imgWidth={},imgHeight={}", imgWidth, imgHeight);
                     // 根据图片大小设置页面，一定要先设置页面，再newPage（），否则无效
-                    document.setPageSize(new Rectangle(img.getWidth(), img.getHeight()));
+                    document.setPageSize(new Rectangle(imgWidth, imgHeight));
                     document.newPage();
                     document.add(img);
                 }

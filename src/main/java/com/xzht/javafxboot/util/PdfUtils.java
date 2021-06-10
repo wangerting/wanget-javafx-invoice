@@ -345,13 +345,12 @@ public class PdfUtils {
                 float scale = Math.min(widthScale, heightScale);
 
                 float offsetX = (documentWidth - (pageWidth * scale)) / 2 + 5f;
-
                 if (wk % 2 == 0) {
                     offsetX = ((documentWidth - (pageWidth * scale)) / 2) + documentWidth + 15f;
                 }
-                float offsetY = (documentWidth - (pageHeight * scale)) * 2 + 20f;
+                float offsetY = (documentWidth - (pageHeight * scale)) * 2 + 50f;
                 if (wk > 2) {
-                    offsetY = 5f;
+                    offsetY = 10f;
                 }
                 log.debug("i={},j={},wk={},documentWidth={},documentHeigh={},pageWidth={},pageHeight={}, scale={},offsetX={},offsetY={}"
                         , i, j, wk, documentWidth, documentHeight, pageWidth, pageHeight, scale, offsetX, offsetY);

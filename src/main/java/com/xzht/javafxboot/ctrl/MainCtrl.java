@@ -61,6 +61,8 @@ public class MainCtrl implements Initializable {
                 String basePath = directory.concat("/");
                 String sourcePdf = basePath.concat("moreToOne.pdf");
                 String targetPdf = basePath.concat("4to1.pdf");
+                //删除生成的图片
+                PdfboxUtil.delImages(basePath);
                 FileIoUtils.deleteFile(sourcePdf);
                 FileIoUtils.deleteFile(targetPdf);
                 //多个pdf合并成一个pdf
