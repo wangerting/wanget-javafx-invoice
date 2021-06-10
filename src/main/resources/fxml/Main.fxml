@@ -3,51 +3,65 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.*?>
-<Pane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xzht.javafxboot.ctrl.MainCtrl">
-   <children>
-      <Button fx:id="btnChooseDirectory" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="选择文件夹" onAction="#onBtnChooseDirectoryClick" />
-      <TextField fx:id="text" layoutX="110.0" layoutY="14.0" disable="true" prefWidth="500.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextField>
-      <TextArea fx:id="textArea" layoutX="14.0" layoutY="50.0" editable ="false" prefRowCount="5">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextArea>
-      <Button fx:id="btnAlert" layoutX="14.0" layoutY="170.0" mnemonicParsing="false" text="4合1" onAction="#onBtnAlertClick" />
-      <Button fx:id="btnOpenDir" layoutX="65.0" layoutY="170.0" mnemonicParsing="false" text="打开当前目录" onAction="#onBtnOpenDir" />
-      <Label layoutX="10.0" layoutY="225.0" text="关键字:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <TextField fx:id="keyWords" layoutX="58.0" layoutY="220.0" prefWidth="500.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextField>
-      <Label layoutX="10.0" layoutY="270.0" text="金额:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <TextField fx:id="textNum" layoutX="44.0" layoutY="265.0" >
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextField>
-      <Button fx:id="btnNumToch" layoutX="245.0" layoutY="265.0" mnemonicParsing="false" text="转换" onAction="#onBtnNumToChClick" />
-      <Label layoutX="310.0" layoutY="270.0" text="大写:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <TextField fx:id="textCh" layoutX="340.0" layoutY="265.0" >
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextField>
-   </children>
+<Pane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
+      prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.xzht.javafxboot.ctrl.MainCtrl">
+    <children>
+        <Button fx:id="btnChooseDirectory" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="选择文件夹"
+                onAction="#onBtnChooseDirectoryClick"/>
+        <TextField fx:id="text" layoutX="110.0" layoutY="14.0" disable="true" prefWidth="500.0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </TextField>
+        <TextArea fx:id="textArea" layoutX="14.0" layoutY="50.0" editable="false" prefRowCount="5">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </TextArea>
+        <Button fx:id="btnAlert" layoutX="14.0" layoutY="170.0" mnemonicParsing="false" text="4合1" onAction="#onBtnAlertClick"/>
+        <Button fx:id="btnOpenDir" layoutX="65.0" layoutY="170.0" mnemonicParsing="false" text="打开当前目录" onAction="#onBtnOpenDir"/>
+        <Label layoutX="10.0" layoutY="225.0" text="广告:">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="keyWords" layoutX="58.0" layoutY="220.0" prefWidth="500.0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </TextField>
+        <Label layoutX="10.0" layoutY="275.0" text="分类:">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="category" layoutX="58.0" layoutY="270.0" prefWidth="500.0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </TextField>
+        <Label layoutX="10.0" layoutY="320.0" text="金额:">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="textNum" layoutX="44.0" layoutY="315.0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </TextField>
+        <Button fx:id="btnNumToch" layoutX="245.0" layoutY="315.0" mnemonicParsing="false" text="转换"
+                onAction="#onBtnNumToChClick"/>
+        <Label layoutX="310.0" layoutY="320.0" text="大写:">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="textCh" layoutX="340.0" layoutY="315.0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </TextField>
+    </children>
 </Pane>

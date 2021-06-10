@@ -39,7 +39,7 @@ public class PdfboxUtil {
         FileIoUtils.deleteFile(sourcePdf);
         FileIoUtils.deleteFile(targetPdf);
         PdfUtils.MergePdf(basePath, sourcePdf);
-        String total = PdfUtils.readPdfGetMoney(sourcePdf);
+        String total = PdfUtils.readPdfGetMoney(sourcePdf, "餐饮服务,客运,投資");
         log.debug("total={}", total);
         //pdf转图片
         pdfToImage(sourcePdf, basePath, "北京京东世纪信息技术有限公司");
@@ -141,17 +141,10 @@ public class PdfboxUtil {
                     String temp = imagesPath.concat(File.separator).concat(images[i]);
                     Image img = Image.getInstance(temp);
                     img.setAlignment(Image.ALIGN_CENTER);
-
                     //2480*3508
-                    float imgWidth = img.getWidth();
-                    float imgHeight = img.getHeight();
-                    log.debug("start, imgWidth={},imgHeight={}", imgWidth, imgHeight);
-//                    if (imgWidth < imgHeight) {
-                    imgWidth = (3508 - 40) / 2f;
-                    imgHeight = (2480 - 100) / 2f;
+                    float imgWidth = (3508 - 40) / 2f;
+                    float imgHeight = (2480 - 100) / 2f;
                     img.scaleAbsolute(imgWidth, imgHeight);
-//                    }
-                    log.debug("end, imgWidth={},imgHeight={}", imgWidth, imgHeight);
                     // 根据图片大小设置页面，一定要先设置页面，再newPage（），否则无效
                     document.setPageSize(new Rectangle(imgWidth, imgHeight));
                     document.newPage();

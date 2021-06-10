@@ -2,6 +2,7 @@ package com.xzht.javafxboot.util;
 
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.RectangleReadOnly;
@@ -20,6 +21,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.util.CollectionUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -30,6 +32,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,14 +55,7 @@ public class PdfUtils {
 //        merge4PagesIntoOne(sourcePdf, targetPdf);
 //        readPdfGetMoney(sourcePdf);
 //        getImages(basePath + "其它_59.40元_2021.03.03_北京京东世纪信息技术有限公司.pdf");
-
-        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf");
-        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1838.99.pdf");
-        readPdfText("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/餐饮费7195.pdf");
-
-        PdfboxUtil.pdfToImage("/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf", basePath, "北京京东世纪信息技术有限公司");
-        boolean words = isExistKeyWords("北京京东世纪信息技术有限公司", "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/1497.99.pdf");
-        log.debug("words={}", words);
+        readPdfGetMoney("/Users/wangerting/Desktop/牛交所/牛交所/发票/0104/st/牛交所 Compliance Service Invoice - Jan 2021.pdf", "投資");
     }
 
     public static boolean isExistKeyWords(String keyWords, PDDocument document, int page) throws Exception {
@@ -162,18 +158,21 @@ public class PdfUtils {
     /**
      * 获取 pdf 的 内容 目前指定获取 金额
      *
-     * @param path
+     * @param pdfFile
+     * @param keyWords
      * @return void
      * @throws
      * @author Erting.Wang
      * @date 2021/3/9 10:27 上午
      */
-    public static String readPdfGetMoney(String path) {
-        File file = new File(path);
+    public static String readPdfGetMoney(String pdfFile, String keyWords) {
+        File file = new File(pdfFile);
         InputStream is = null;
         PDDocument document = null;
         try {
             BigDecimal total = BigDecimal.ZERO;
+            Map<String, BigDecimal> categoryTotal = Maps.newHashMap();
+            String[] keyWordList = keyWords.split(",");
             document = PDDocument.load(file);
             int pageSize = document.getNumberOfPages();
             // 一页一页读取
@@ -185,38 +184,66 @@ public class PdfUtils {
                 stripper.setStartPage(i + 1);
                 stripper.setEndPage(i + 1);
                 String text = stripper.getText(document);
-
                 String[] lines = text.split("\\r?\\n");
+                String pageMoneyStr = "";
                 for (String line : lines) {
                     if (line.contains("价税合计")) {
-                        log.debug("content={},", line);
-                        log.debug("index={},index2={}", line.indexOf("￥"), line.indexOf("¥"));
                         int start = line.indexOf("￥") > 0 ? line.indexOf("￥") : line.indexOf("¥");
                         if (start > 0) {
-                            String moneyStr = line.substring(start, line.length())
+                            pageMoneyStr = line.substring(start, line.length())
                                     .replaceAll("￥", "")
                                     .replaceAll("¥", "").trim();
-                            log.debug("start={},moneyStr={}", start, moneyStr);
-                            total = total.add(new BigDecimal(moneyStr));
                         } else {
-                            String numToStr = getNumToStr(line);
-                            if (StringUtils.isEmpty(numToStr)) {
+                            pageMoneyStr = getNumToStr(line);
+                            if (StringUtils.isEmpty(pageMoneyStr)) {
                                 String str = line.replace("价税合计", "").replace("（大写）", "").replace("（小写）", "")
                                         .replaceAll(" ", "");
                                 log.debug("str={}", str);
-                                numToStr = MoneyUtil.ChineseConvertToNumber(str);
+                                pageMoneyStr = MoneyUtil.ChineseConvertToNumber(str);
                             }
-                            total = total.add(new BigDecimal(numToStr));
                         }
                         break;
                     }
+                    if (line.contains("總額")) {
+                        pageMoneyStr = line.replace("總額", "").replaceAll(" ", "").replaceAll(",", "");
+                        break;
+                    }
                 }
-                log.debug("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+                BigDecimal pageMoney = new BigDecimal(pageMoneyStr);
+                total = total.add(pageMoney);
+                if (StringUtils.isNotEmpty(keyWords)) {
+                    String pageText = stripper.getText(document).replaceAll("\\r", "").replaceAll("\\n", "").replaceAll(" ", "");
+                    for (String keyWord : keyWordList) {
+                        if (pageText.contains(keyWord)) {
+                            if (categoryTotal.containsKey(keyWord)) {
+                                categoryTotal.put(keyWord, categoryTotal.get(keyWord).add(pageMoney));
+                            } else {
+                                categoryTotal.put(keyWord, pageMoney);
+                            }
+                            break;
+                        }else{
+                            if (categoryTotal.containsKey("其他")) {
+                                categoryTotal.put("其他", categoryTotal.get("其他").add(pageMoney));
+                            } else {
+                                categoryTotal.put("其他", pageMoney);
+                            }
+                        }
+                    }
+                }
             }
-            log.debug("total={},RMB={}", total, MoneyUtil.toRmbString(total));
-            return "总金额=" + total + " | " + MoneyUtil.toRmbString(total).concat("\r\n已经在对应文件夹生成 '4to1.pdf' 文件用于打印！");
+            log.debug("total={},RMB={},categoryTotal={}", total, MoneyUtil.toRmbString(total), categoryTotal);
+            String result = "";
+            if (!CollectionUtils.isEmpty(categoryTotal)) {
+                for (Map.Entry<String, BigDecimal> entry : categoryTotal.entrySet()) {
+                    result = result.concat("分类：").concat(entry.getKey()).concat("=>")
+                            .concat("金额：").concat(entry.getValue().toString()).concat("\r\n");
+                }
+            }
+
+            return result.concat("总金额=").concat(total.toString()).concat(" | ").concat(MoneyUtil.toRmbString(total))
+                    .concat("\r\n已经在对应文件夹生成 '4to1.pdf' 文件用于打印！");
         } catch (Exception e) {
-            log.error("path={}, e={}", path, e);
+            log.error("path={}, e={}", pdfFile, e);
         } finally {
             try {
                 if (document != null) {
@@ -352,8 +379,6 @@ public class PdfUtils {
                 if (wk > 2) {
                     offsetY = 10f;
                 }
-                log.debug("i={},j={},wk={},documentWidth={},documentHeigh={},pageWidth={},pageHeight={}, scale={},offsetX={},offsetY={}"
-                        , i, j, wk, documentWidth, documentHeight, pageWidth, pageHeight, scale, offsetX, offsetY);
                 cb.addTemplate(page, scale, 0, 0, scale, offsetX, offsetY);
                 wk++;
             }
