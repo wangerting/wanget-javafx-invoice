@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class PdfboxUtil {
 
-    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/";
+    public static String basePath = "/Users/wangerting/Downloads/5月/";
     //    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/0104/";
     //经过测试,dpi为96,100,105,120,150,200中,105显示效果较为清晰,体积稳定,dpi越高图片体积越大,一般电脑显示分辨率为96
     public static final float DEFAULT_DPI = 300;

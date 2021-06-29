@@ -63,7 +63,7 @@ public class TrimWhite {
                 }
             }
         }
-        return trimmedWidth + 5;
+        return trimmedWidth + 10;
     }
 
     private int getTrimmedHeight(Color color) {
@@ -78,7 +78,7 @@ public class TrimWhite {
                 }
             }
         }
-        return trimmedHeight + 10;
+        return trimmedHeight + 15;
     }
 
     public static void main(String[] args) throws Exception {

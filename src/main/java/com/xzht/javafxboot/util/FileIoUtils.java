@@ -239,4 +239,35 @@ public class FileIoUtils {
             }
         }
     }
+
+    public static void filePermission(String path) {
+        File dir = new File(path);
+        // 判断是否存在目录
+        if (!dir.exists() || !dir.isDirectory()) {
+            return;
+        }
+        for (String filename : dir.list()) {
+            String temp = path.concat(File.separator).concat(filename);
+            File file = new File(temp);
+            try {
+                if (file.createNewFile()) {
+                    System.out.println("File is created!");
+                    //Runtime.getRuntime().exec("chmod 777 /home/test3.txt");
+                    //设置可执行权限
+                    file.setExecutable(true);
+                    //设置可读权限
+                    file.setReadable(true);
+                    //设置可写权限
+                    file.setWritable(true);
+                    System.out.println("is execute allow : " + file.canExecute());
+                    System.out.println("is read allow : " + file.canRead());
+                    System.out.println("is write allow : " + file.canWrite());
+                } else {
+                    System.out.println("File already exists.");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
