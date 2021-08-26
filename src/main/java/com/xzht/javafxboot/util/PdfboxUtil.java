@@ -88,6 +88,7 @@ public class PdfboxUtil {
                     height = imageHeight / 2 - 100;
                     log.debug("keyWords is true,pdfPath={}", pdfPath);
                 }
+                log.debug("end-width={},height={},i={}", width, height, i);
                 //保存每页图片的像素值
                 imageResult = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
                 //这里有高度，可以将imageHeight*len，我这里值提取一页所以不需要

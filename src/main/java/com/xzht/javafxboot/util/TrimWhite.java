@@ -1,5 +1,7 @@
 package com.xzht.javafxboot.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,6 +14,7 @@ import java.io.IOException;
  * @desciption 裁剪/修剪具有空白空间的JPG文件
  * @date 2021/6/9 11:40 上午
  */
+@Slf4j
 public class TrimWhite {
     private BufferedImage img;
 
@@ -36,7 +39,7 @@ public class TrimWhite {
 
         int width = getTrimmedWidth(color);
         int height = getTrimmedHeight(color);
-
+        log.debug("width={},height={}", width, height);
         BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics g = newImg.createGraphics();
         g.drawImage(img, 0, 0, null);
@@ -63,7 +66,7 @@ public class TrimWhite {
                 }
             }
         }
-        return trimmedWidth + 10;
+        return trimmedWidth + 5;
     }
 
     private int getTrimmedHeight(Color color) {
@@ -78,9 +81,9 @@ public class TrimWhite {
                 }
             }
         }
-        return trimmedHeight + 15;
+        return trimmedHeight + 5;
     }
-
+    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/wangerting/9/";
     public static void main(String[] args) throws Exception {
 //        String srcFile = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4.png";
 //        String targetFile = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/未命名文件夹/4-1.png";
@@ -89,10 +92,9 @@ public class TrimWhite {
 //        trimWhite(srcFile, targetFile);
 //        RotateImage.rotate180(targetFile, srcFile2);
 //        trimWhite(srcFile2, targetFile2);
-
-        String img = "/Users/wangerting/Desktop/牛交所/牛交所/发票/0104/4.png";
-        String img2 = "/Users/wangerting/Desktop/牛交所/牛交所/发票/0104/4-4.png";
-        trimBlack(img, img2);
+        String sourcePdf = basePath.concat("011002100311_37596105_北京固若石科技有限公司.pdf");
+        //pdf转图片
+        PdfboxUtil.pdfToImage(sourcePdf, basePath, "");
     }
 
     public static void trimWhite(String srcFile, String targetFile) {

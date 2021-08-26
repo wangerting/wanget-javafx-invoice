@@ -44,18 +44,28 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class PdfUtils {
-    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/6/李晴/";
+    public static String basePath = "/Users/wangerting/Desktop/牛交所/牛交所/发票/2021年发票/wangerting/9/";
 
     public static void main(String[] args) throws Exception {
-//        String sourcePdf = basePath + "moreToOne.pdf";
-//        String targetPdf = basePath + "4to1-1.pdf";
-//        FileIoUtils.deleteFile(sourcePdf);
-//        FileIoUtils.deleteFile(targetPdf);
-//        MergePdf(basePath, sourcePdf);
-//        merge4PagesIntoOne(sourcePdf, targetPdf);
-//        readPdfGetMoney(sourcePdf);
-//        getImages(basePath + "其它_59.40元_2021.03.03_北京京东世纪信息技术有限公司.pdf");
-        readPdfGetMoney("/Users/wangerting/Desktop/牛交所/牛交所/发票/0104/st/牛交所 Compliance Service Invoice - Jan 2021.pdf", "投資");
+        String sourcePdf = basePath.concat("moreToOne.pdf");
+        String targetPdf = basePath.concat("4to1.pdf");
+        //删除生成的图片
+        PdfboxUtil.delImages(basePath);
+        FileIoUtils.deleteFile(sourcePdf);
+        FileIoUtils.deleteFile(targetPdf);
+        //多个pdf合并成一个pdf
+        PdfUtils.MergePdf(basePath, sourcePdf);
+        //pdf转图片
+        PdfboxUtil.pdfToImage(sourcePdf, basePath, "");
+        //图片转pdf
+        PdfboxUtil.imagesToPdf(sourcePdf, basePath);
+        //4合1
+        PdfUtils.merge4PagesIntoOne(sourcePdf, targetPdf);
+        //删除临时生成的pdf
+        FileIoUtils.deleteFile(sourcePdf);
+        //删除生成的图片
+        PdfboxUtil.delImages(basePath);
+        //将发票总金额统计好后，填充到文本框中
     }
 
     public static boolean isExistKeyWords(String keyWords, PDDocument document, int page) throws Exception {
@@ -358,10 +368,10 @@ public class PdfUtils {
                 PdfImportedPage page = writer.getImportedPage(reader, j);
 
                 float documentWidth = doc.getPageSize().getWidth() / 2;
-                documentWidth = documentWidth - 10f;
+                documentWidth = documentWidth - 20f;
                 float documentHeight = doc.getPageSize().getHeight();
                 if (i > 1) {
-                    documentHeight = documentHeight - 40f;
+                    documentHeight = documentHeight - 50f;
                 }
 
                 float pageWidth = page.getWidth();
@@ -371,11 +381,11 @@ public class PdfUtils {
                 float heightScale = documentHeight / pageHeight;
                 float scale = Math.min(widthScale, heightScale);
 
-                float offsetX = (documentWidth - (pageWidth * scale)) / 2 + 5f;
+                float offsetX = (documentWidth - (pageWidth * scale)) / 2 + 10f;
                 if (wk % 2 == 0) {
-                    offsetX = ((documentWidth - (pageWidth * scale)) / 2) + documentWidth + 15f;
+                    offsetX = ((documentWidth - (pageWidth * scale)) / 2) + documentWidth + 25f;
                 }
-                float offsetY = (documentWidth - (pageHeight * scale)) * 2 + 50f;
+                float offsetY = (documentWidth - (pageHeight * scale)) * 2 + 55f;
                 if (wk > 2) {
                     offsetY = 10f;
                 }
