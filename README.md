@@ -4,7 +4,9 @@
 # 运行效果
 
 ![截图](./screenshot/03.gif)
+<br/>
 软件界面
+<br/>
 ![Image](./screenshot/4.png)
 ![Image](./screenshot/5.png)
 ![Image](./screenshot/6.png)
