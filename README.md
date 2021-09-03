@@ -5,6 +5,13 @@
 # 运行效果
 
 ![截图](./screenshot/03.gif)
+软件界面
+![Image](./screenshot/4.png)
+![Image](./screenshot/5.png)
+![Image](./screenshot/6.png)
+
+最终生成的文件
+![Image](./screenshot/7.png)
 
 # 打包教程
 
